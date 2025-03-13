@@ -1,0 +1,26 @@
+{
+  "canisters": {
+    "sorteio_backend": {
+      "main": "src/sorteio_backend/main.mo",
+      "type": "motoko"
+    },
+    "sorteio_frontend": {
+      "dependencies": [
+        "sorteio_backend"
+      ],
+      "source": [
+        "src/sorteio_frontend/dist"
+      ],
+      "type": "assets",
+      "workspace": "sorteio_frontend"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
