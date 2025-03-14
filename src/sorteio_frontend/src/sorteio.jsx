@@ -2,25 +2,26 @@ import { useState } from "react";
 import { sorteio_backend } from "declarations/sorteio_backend";
 
 function App() {
-  const [numMembros, setNumMembros] = useState(1); // Quantidade de membros por equipe
-  const [totalEquipes, setTotalEquipes] = useState(0); // Quantidade de equipes
-  const [nomesEquipes, setNomesEquipes] = useState([]); // Lista com os nomes dos jogadores
+  const [numMembros, setNumMembros] = useState(1);
+  const [totalEquipes, setTotalEquipes] = useState(0);
+  const [nomesEquipes, setNomesEquipes] = useState([]);
+  const [resultadoSorteio, setResultadoSorteio] = useState(null); // Novo estado para armazenar o resultado
 
-  // Atualiza a quantidade de equipes e reinicia os nomes
+
   function handleTotalEquipesChange(e) {
     const total = Number(e.target.value);
     setTotalEquipes(total);
     setNomesEquipes(Array(total).fill(Array(numMembros).fill("")));
   }
 
-  // Atualiza a quantidade de membros por equipe e reinicia os nomes
+
   function handleNumMembrosChange(e) {
     const membros = Number(e.target.value);
     setNumMembros(membros);
     setNomesEquipes(Array(totalEquipes).fill(Array(membros).fill("")));
   }
 
-  // Atualiza os nomes de um jogador específico dentro de uma equipe
+
   function handleNomeChange(e, equipeIndex, membroIndex) {
     const novoNome = e.target.value;
     const novasEquipes = [...nomesEquipes];
@@ -31,17 +32,26 @@ function App() {
     setNomesEquipes(novasEquipes);
   }
 
-  function handleSortear() {
+  async function handleSortear(event) {
+    event.preventDefault();
+
     if (totalEquipes === 0) {
       alert("Por favor, insira o número de equipes/jogadores.");
       return;
     }
 
-    console.log("Sorteio enviado para o backend:", nomesEquipes);
-    sorteio_backend.sortear(numMembros, nomesEquipes).then((resultado) => {
-      console.log("Resultado do sorteio:", resultado);
-    });
+    try {
+      console.log("Enviando sorteio para o backend...");
 
+      const resultado = await sorteio_backend.sorteio(totalEquipes);
+
+      console.log("Resultado do sorteio:", resultado);
+      
+      setResultadoSorteio(resultado); // Atualiza o estado com o resultado
+
+    } catch (error) {
+      console.error("Erro ao realizar o sorteio:", error);
+    }
   }
 
   return (
@@ -49,7 +59,7 @@ function App() {
       <h1>Sorteador</h1>
       <div className="cartao">
         <div className="numeros">
-          {/* Seleção de quantidade de membros por equipe */}
+
           <div className="grupo-input">
             <label htmlFor="tipo-equipe">Selecione o tipo de equipe</label>
             <select
@@ -66,7 +76,7 @@ function App() {
             </select>
           </div>
 
-          {/* Input para total de equipes */}
+
           <div className="grupo-input">
             <label htmlFor="total-equipes">Total de Participantes/Equipes</label>
             <br />
@@ -79,7 +89,7 @@ function App() {
             />
           </div>
 
-          {/* Campos de entrada para os nomes dos jogadores */}
+
           <div className="grupo-input">
             <label>Informe os nomes dos jogadores:</label>
             {nomesEquipes.map((equipe, equipeIndex) => (
@@ -102,10 +112,22 @@ function App() {
           </div>
 
           <button onClick={handleSortear}>Sortear</button>
+
+          {resultadoSorteio && (
+            <div className="resultados">
+              <h2>DISPUTAS</h2>
+              <div className="resultados-chaves">
+                <h3>Equipe 1</h3>
+                <p>{resultadoSorteio.array1.join(", ")}</p>
+                <h3>Equipe 2</h3>
+                <p>{resultadoSorteio.array2.join(", ")}</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
-    
+
   );
 
 }
