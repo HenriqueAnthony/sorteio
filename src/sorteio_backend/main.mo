@@ -1,41 +1,53 @@
 import Nat "mo:base/Nat";
 import Random "mo:base/Random";
+import Buffer "mo:base/Buffer";
 
 actor {
-  public func sorteio(num: Nat) : async {numero1: Nat ; numero2: Nat} {
-      let num1 : Nat = await sortearNumero(num);  
-      var num2 : Nat = await sortearNumero(num);  
+  public func sorteio(num: Nat) : async { array1: [Nat]; array2: [Nat] } {
+    if (num < 1) {
+      return { array1 = []; array2 = [] };
+    };
 
-      while (num2==num1){
-          num2 := await sortearNumero(num);  
+    var numerosDisponiveis = Buffer.Buffer<Nat>(num);
+    var array1 = Buffer.Buffer<Nat>(num / 2);
+    var array2 = Buffer.Buffer<Nat>(num / 2);
+
+    // Preenchendo a lista com os números de 1 até num
+    var i = 1;
+    while (i <= num) {
+      numerosDisponiveis.add(i);
+      i += 1;
+    };
+
+    var alternar = true;
+
+    while (numerosDisponiveis.size() > 0) {
+      let index = await sortearNumero(numerosDisponiveis.size());
+      let sorteado = numerosDisponiveis.remove(index - 1); // Remove e retorna o número
+
+      if (alternar) {
+        array1.add(sorteado);
+      } else {
+        array2.add(sorteado);
       };
+      alternar := not alternar;
+    };
 
-      return {numero1 = num1 ; numero2 = num2};
+    return { array1 = Buffer.toArray(array1); array2 = Buffer.toArray(array2) };
   };
 
-   // Função que recebe um número máximo como parâmetro
-  public func sortearNumero(maximo : Nat) : async Nat {
-    // Verificar se o número máximo é pelo menos 1
+  public func sortearNumero(maximo: Nat) : async Nat {
     if (maximo < 1) {
-      return 1; // Retorna 1 se o máximo for inválido
+      return 1;
     };
-        
+
     let blob = await Random.blob();
-    
-    // Criar uma instância finita de randomness
+
     let random = Random.Finite(blob);
     
-    // Gerar um número entre 0 e (maximo-1)
-    switch (random.range(8)) {  // Usamos 8 bits para ter espaço suficiente
-      case (?valor) {
-        // Converter para um número entre 1 e maximo
-        (valor % maximo) + 1
-      };
-      case null {
-        // Caso a entropia seja esgotada (improvável neste caso)
-        1  // Valor padrão
-      };
+    switch (random.range(8)) {
+      case (?valor) { (valor % maximo) + 1 };
+      case null { 1 };
     };
   };
-  
 };
