@@ -1,31 +1,21 @@
-import { useState } from 'react';
-import { sorteio_backend } from 'declarations/sorteio_backend';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Index from './index';
+import Sorteio from './sorteio';
 
-function App() {
-  const [greeting, setGreeting] = useState('');
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    const name = event.target.elements.name.value;
-    sorteio_backend.greet(name).then((greeting) => {
-      setGreeting(greeting);
-    });
-    return false;
-  }
+function App(){
 
   return (
-    <main>
-      <img src="/logo2.svg" alt="DFINITY logo" />
-      <br />
-      <br />
-      <form action="#" onSubmit={handleSubmit}>
-        <label htmlFor="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit">Click Me!</button>
-      </form>
-      <section id="greeting">{greeting}</section>
-    </main>
+
+    <Router>
+      <Routes>
+        <Route path="/" element={<Index/>} />        
+        <Route path="/sorteio/" element={<Sorteio/>} /> 
+               
+      </Routes>
+    </Router>
+
   );
 }
+
 
 export default App;
