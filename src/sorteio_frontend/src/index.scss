@@ -8,43 +8,83 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
-  background-color: #6D214F;
+  background: url(./lobo.jpg) no-repeat;
+  background-size: cover;
+  background-position: center;
   height: 100vh;
   margin: 0;
+}
+.container{
+  width: 420px;
+  background: transparent;
+  border: solid 2px rgba( 255, 255, 255, .2);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 10px #000000;
+  color: #fff;
+  border-radius: 10px;
+  padding: 30px 40px;
 }
 
 h1 {
   color: white;
   font-size: 46px;
+  text-align: center;
 }
 
-.cartao {
-  background-color: #B33771;
-  padding: 24px;
-  min-width: 300px;
-  border-radius: 24px;
-}
-.cartao .grupo-input{
+
+.grupo-input{
   margin-top: 8px;
 }
 
+.grupo-input .selcao{
+  width: 100%;
+  padding: 4px;
+  margin-top: 4px;
+  border-radius: 4px;
+  border: solid 1px #248ade;
+}
+.grupo-input .mostrar{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 4px;
+  margin-top: 4px;
+  border-radius: 4px;
+  border: solid 1px #248ade;
+}
 .cartao input{
   width: 100%;
   padding: 4px;
   margin-top: 4px;
   border-radius: 4px;
-  border: solid 1px #D6A2E8;
+  border: solid 1px #248ade;
 }
 .cartao button{
-  background-color:#D6A2E8;
+  background-color:#248ade;
   border: none;
   padding: 8px;
   width: 100%;
   font-size: 16px;
   margin-top: 8px;
+  border-radius: 8px;
 }
 h2 {
   margin-bottom: 0;
   text-align: center;
+}
+.resultados{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 4px;
+  margin-top: 4px;
+  border-radius: 4px;
+  border: solid 1px #248ade;
+}
+.resultados .resultados-chaves{
+  width: 50%;
+  box-sizing: border-box;
+  padding: 4px;
+  margin-top: 4px;
+  border-radius: 4px;
+  border: solid 1px #248ade;
+
 }

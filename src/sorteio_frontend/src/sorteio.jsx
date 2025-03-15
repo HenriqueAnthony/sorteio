@@ -55,14 +55,15 @@ function App() {
   }
 
   return (
+  <section class="container">  
     <div>
       <h1>Sorteador</h1>
       <div className="cartao">
         <div className="numeros">
 
           <div className="grupo-input">
-            <label htmlFor="tipo-equipe">Selecione o tipo de equipe</label>
-            <select
+            <label htmlFor="tipo-equipe">Selecione o tipo de campeonato: </label>
+            <select class="selcao"
               id="tipo-equipe"
               value={numMembros}
               onChange={handleNumMembrosChange}
@@ -78,7 +79,7 @@ function App() {
 
 
           <div className="grupo-input">
-            <label htmlFor="total-equipes">Total de Participantes/Equipes</label>
+            <label htmlFor="total-equipes">Total de Participantes/Equipes: </label>
             <br />
             <input
               type="number"
@@ -91,24 +92,26 @@ function App() {
 
 
           <div className="grupo-input">
-            <label>Informe os nomes dos jogadores:</label>
-            {nomesEquipes.map((equipe, equipeIndex) => (
-              <div key={equipeIndex} className="equipe">
-                <strong>Equipe {equipeIndex + 1}</strong>
-                {equipe.map((nome, membroIndex) => (
-                  <div key={membroIndex}>
-                    <input
-                      type="text"
-                      placeholder={`Jogador ${membroIndex + 1}`}
-                      value={nome}
-                      onChange={(e) =>
-                        handleNomeChange(e, equipeIndex, membroIndex)
-                      }
-                    />
-                  </div>
-                ))}
-              </div>
-            ))}
+            <div class="mostrar">
+              <label>Informe os nomes dos jogadores:</label>
+              {nomesEquipes.map((equipe, equipeIndex) => (
+                <div key={equipeIndex} className="equipe">
+                  <strong>Equipe {equipeIndex + 1}</strong>
+                  {equipe.map((nome, membroIndex) => (
+                    <div key={membroIndex}>
+                      <input
+                        type="text"
+                        placeholder={`Jogador ${membroIndex + 1}`}
+                        value={nome}
+                        onChange={(e) =>
+                          handleNomeChange(e, equipeIndex, membroIndex)
+                        }
+                      />
+                    </div>
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
 
           <button onClick={handleSortear}>Sortear</button>
@@ -127,7 +130,7 @@ function App() {
         </div>
       </div>
     </div>
-
+  </section>        
   );
 
 }
