@@ -3,9 +3,9 @@ import { sorteio_backend } from "declarations/sorteio_backend";
 
 function App() {
   const [numMembros, setNumMembros] = useState(1);
-  const [totalEquipes, setTotalEquipes] = useState(0);
+  const [totalEquipes, setTotalEquipes] = useState();
   const [nomesEquipes, setNomesEquipes] = useState([]);
-  const [resultadoSorteio, setResultadoSorteio] = useState(null); // Novo estado para armazenar o resultado
+  const [resultadoSorteio, setResultadoSorteio] = useState(null);
 
   function handleTotalEquipesChange(e) {
     const total = Number(e.target.value);
@@ -39,77 +39,85 @@ function App() {
 
     try {
       console.log("Enviando sorteio para o backend...");
-
-      const resultado = await sorteio_backend.sorteio(totalEquipes);
-
+      const resultado = await sorteio_backend.sorteio(nomesEquipes.flat());
       console.log("Resultado do sorteio:", resultado);
-
-      setResultadoSorteio(resultado); // Atualiza o estado com o resultado
+      setResultadoSorteio(resultado);
     } catch (error) {
       console.error("Erro ao realizar o sorteio:", error);
     }
   }
 
   return (
-    <section class="container">
+    <section className="container">
       <div>
         <h1>Sorteador</h1>
         <div className="cartao">
           <div className="numeros">
             <div className="grupo-input">
-              <label htmlFor="tipo-equipe">
-                Selecione o tipo de campeonato:{" "}
-              </label>
-              <select
-                class="selcao"
-                id="tipo-equipe"
-                value={numMembros}
-                onChange={handleNumMembrosChange}
-              >
-                <option value="1">1 Jogador</option>
-                <option value="2">Dupla (2 Jogadores)</option>
-                <option value="3">Trio (3 Jogadores)</option>
-                <option value="4">Quarteto (4 Jogadores)</option>
-                <option value="5">Equipe (5 Jogadores)</option>
-                <option value="6">Equipe (6 Jogadores)</option>
-              </select>
+              <div className="dois">
+                <label htmlFor="tipo-equipe">Tipo de jogo: </label>
+                <select
+                  id="tipo-equipe"
+                  value={numMembros}
+                  onChange={handleNumMembrosChange}
+                >
+                  <option>Equipes</option>
+                </select>
+                <div className="grupo-input">
+                  <div className="total-equipes">
+                    <label htmlFor="tota">Total de Equipes: </label>
+                    
+                    <input
+                      type="number"
+                      id="total-equipes"
+                      value={totalEquipes}
+                      onChange={handleTotalEquipesChange}
+                      min="1"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-
             <div className="grupo-input">
-              <label htmlFor="total-equipes">
-                Total de Participantes/Equipes:{" "}
-              </label>
-              <br />
-              <input
-                type="number"
-                id="total-equipes"
-                value={totalEquipes}
-                onChange={handleTotalEquipesChange}
-                min="1"
-              />
+              <div className="mostrar">
+                <label>Informe os nomes das Equipes</label>
+                {nomesEquipes.map((equipe, equipeIndex) => (
+                  <div key={equipeIndex} className="equipe">
+                    <strong>Equipe </strong>
+                    {equipe.map((nome, membroIndex) => (
+                      <div key={membroIndex}>
+                        <input
+                          type="text"
+                          placeholder={`Jogador`}
+                          value={nome}
+                          onChange={(e) =>
+                            handleNomeChange(e, equipeIndex, membroIndex)
+                          }
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
             </div>
-
-            
 
             <button onClick={handleSortear}>Sortear</button>
 
             {resultadoSorteio && (
               <div className="resultados">
                 <h2>DISPUTAS</h2>
-                
-                  <div class="lista">
-                    <p>
-                      {resultadoSorteio.array1
-                        .map(
-                          (num, index) =>
-                            num +
-                            " X " +
-                            (resultadoSorteio.array2[index] || "Aguardando")
-                        )
-                        .join("\n")}
-                    </p>
-                  </div>
-                
+                <div className="lista">
+                  <p>
+                    {resultadoSorteio.array1
+                      .map(
+                        (nome, index) =>
+                          `${nome} X ${
+                            resultadoSorteio.array2[index] || "Aguardando"
+                          }`
+                      )
+                      .join("\n")}
+                  </p>
+                </div>
               </div>
             )}
           </div>
